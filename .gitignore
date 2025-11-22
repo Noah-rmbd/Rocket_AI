@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+.venv/
+bin/
+lib/
+include/
+pyvenv.cfg
+
+# OS
+.DS_Store
+Thumbs.db
