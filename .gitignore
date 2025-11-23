@@ -2,12 +2,14 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pth
 
 # Virtual Environment
 venv/
 .venv/
 bin/
 lib/
+share/
 include/
 pyvenv.cfg
 
