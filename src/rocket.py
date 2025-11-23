@@ -23,14 +23,6 @@ class Rocket():
         y_rectangle: float = rectangle_height/2
 
         # Moment of inertia of the triangle about its centroid
-        # Formula for triangle about centroid is bh^3/36? No, for isosceles triangle:
-        # I_centroid = m * h^2 / 18 (approx for thin plate) or more complex for solid.
-        # Using standard approximation m*h^2/18 for height axis? 
-        # Actually, for a 2D triangle rotating in plane: I = m/6 * (b^2/4 + h^2/3)?
-        # Let's stick to a reasonable approximation for now, but the previous one was definitely off.
-        # Previous: (m * h^2) / 6. 
-        # Let's use the standard list value for a triangle rotating around centroid: m*(a^2 + b^2 + c^2)/36 ? No that's 3D.
-        # Let's just correct the obvious one: I = m*h^2/18 is common for simple approximations.
         I_triangle: float = (m_triangle * triangle_height**2) / 18
         
         # Moment of inertia of the rectangle about its centroid
@@ -118,8 +110,6 @@ class Rocket():
         tau3 = np.cross(self.r3_local, self.F3_local * e3)
 
         # Calculate the net torque
-        # Angular Damping: tau_drag = -c * omega * |omega|
-        # Coefficient c can be tuned. Let's try 5.0 for noticeable damping.
         damping_coefficient = 5.0
         tau_damping = -damping_coefficient * self.angular_velocity * abs(self.angular_velocity)
         
@@ -133,8 +123,6 @@ class Rocket():
         # Update angular velocity and orientation
         self.angular_velocity += self.alpha * delta_time
         self.orientation += self.angular_velocity * delta_time
-        #print("Position: ", self.position, self.orientation)
-
 
     def get_position_and_orientation(self):
         return self.position, self.orientation

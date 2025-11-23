@@ -52,15 +52,6 @@ def train(n_episodes=100, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.9
     print(f"Starting training with {num_envs} parallel environments...")
     print(f"Device: {agent.device}")
     
-    # We track episodes by "batches" of parallel runs
-    # But standard reporting is usually per episode. 
-    # Since we have continuous parallel envs, we can just track total steps or average score.
-    # Let's track average score of completed episodes.
-    
-    # For simplicity in this loop, we'll just run N "parallel steps" which roughly corresponds to episodes
-    # But since they reset independently, it's a bit async.
-    # Let's just run for a fixed number of updates/frames.
-    
     total_frames = 0
     max_frames = n_episodes * max_t # Approximation
     
@@ -75,8 +66,6 @@ def train(n_episodes=100, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.9
         states = np.array(env.states)
         
         # Select actions (epsilon-greedy)
-        # We need to vectorize act? Agent.act is single.
-        # Let's make a batch act or just loop.
         actions = []
         for i in range(num_envs):
             actions.append(agent.act(states[i], eps))
@@ -100,16 +89,6 @@ def train(n_episodes=100, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.9
                     agent.save(f'checkpoint_{i_episode}.pth')
 
         eps = max(eps_end, eps_decay * eps) # Decay epsilon
-        
-        # This decay might be too fast if we decay per step per env? 
-        # Usually decay per episode. 
-        # Let's decay only when an episode finishes? 
-        # Or just decay slowly. 0.995 per step is too fast. 
-        # 0.995 per episode is standard. 
-        # Since we have multiple envs, we can decay every time *any* env finishes?
-        # Let's stick to simple decay per step but very slow, or decay per "batch of steps".
-        # Actually, let's decay only when i_episode increments.
-        
     
     print("\nTraining completed.")
     agent.save('final_model.pth')
